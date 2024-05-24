@@ -2,7 +2,8 @@ const { Router } = require('express')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const jwt = require('jsonwebtoken')
-require('dotenv').config()
+const dotenv = require('dotenv')
+dotenv.config()
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 const userSchema = Schema(
@@ -36,11 +37,13 @@ userSchema.methods.toJSON = function () {
 
 //토큰 생성
 userSchema.methods.generateToken = function () {
-   const token = jwt.sign({ _id: this._id }, JWT_SECRET_KEY, {
+   const token = jwt.sign({ _id: this._id }, `${JWT_SECRET_KEY}`, {
       expiresIn: '1d',
    })
    return token
 }
+
+console.log('JWT Secret:', process.env.JWT_SECRET_KEY)
 
 const User = mongoose.model('User', userSchema)
 
