@@ -1,4 +1,5 @@
 const express = require('express')
+const authController = require('../controller/auth.controller')
 const taskController = require('../controller/task.controller')
 const router = express.Router()
 
@@ -18,9 +19,9 @@ const router = express.Router()
 //    res.send('delete task')
 // })
 
-router.post('/', taskController.createTask)
-
 router.get('/', taskController.getTask)
+
+router.post('/', authController.authenticate, taskController.createTask)
 
 router.put('/:id', taskController.updateTask)
 

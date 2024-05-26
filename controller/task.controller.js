@@ -5,7 +5,9 @@ const taskController = {}
 taskController.createTask = async (req, res) => {
    try {
       const { task, isComplete } = req.body
-      const newTask = new Task({ task, isComplete })
+      const { userId } = req
+
+      const newTask = new Task({ task, isComplete, author: userId })
       await newTask.save()
 
       res.status(200).json({ status: 'ok', data: newTask })
@@ -16,7 +18,7 @@ taskController.createTask = async (req, res) => {
 
 taskController.getTask = async (req, res) => {
    try {
-      const taskList = await Task.find({}).select('-__v')
+      const taskList = await Task.find({}).select('-__v').populate('author') //외래키(FK) 중심으로 Join하는 역할의 함수
       res.status(200).json({ status: 'ok', data: taskList })
    } catch (err) {
       res.status(400).json({ statue: 'fail', error: err })
